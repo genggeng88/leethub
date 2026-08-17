@@ -18,16 +18,16 @@ class Solution {
 
     private void bfs(int i, int j, char[][] grid) {
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{i, j});
         grid[i][j] = '0';
+        queue.offer(new int[]{i, j});
 
         while (!queue.isEmpty()) {
             int[] node = queue.poll();
             for (int[] dir : dirs) {
                 int newi = dir[0] + node[0], newj = dir[1] + node[1];
                 if (inbound(newi, newj, grid.length, grid[0].length) && grid[newi][newj] == '1') {
-                    queue.offer(new int[]{newi, newj});
                     grid[newi][newj] = '0';
+                    queue.offer(new int[]{newi, newj});
                 }
             }
         }
