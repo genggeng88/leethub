@@ -1,0 +1,56 @@
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        if (firstList == null || firstList.length == 0) return new int[][]{};
+        if (secondList == null || secondList.length == 0) return new int[][]{};
+
+        int i = 0, j = 0, m = firstList.length, n = secondList.length;
+        int[] first = new int[2], second = new int[2];
+        List<int[]> buffer = new LinkedList<>();
+        // double check condition
+        while (i < m && j < n) {
+            first = firstList[i];
+            second = secondList[j];
+            if ((second[0] >= first[0] && first[1] >= second[0]) || (first[0] >= second[0] && second[1] >= first[0])) {
+                int[] inter = new int[]{Math.max(first[0], second[0]), Math.min(first[1], second[1])};
+                buffer.add(inter);
+                if (first[1] < second[1]) {
+                    i++;
+                }
+                else if (second[1] < first[1]) {
+                    j++;
+                }
+                else {
+                    i++;
+                    j++;
+                }
+            }
+            else {
+                if (first[1] < second[1]) i++;
+                else j++;
+            }
+
+        }
+        int[][] res = new int[buffer.size()][2];
+        for (int k = 0; k < buffer.size(); k++) {
+            res[k] = buffer.get(k);
+        }
+        return res;
+    }
+}
+
+// two pointers: i, j
+//     one = first[i]
+//     two = second[j]
+//     if overlap
+//         get intersection, put into res
+//         // [max(one[0], two[0]), min(one[1], two[1]]
+//         // update one interval for next compare
+//         if (one[1] < two[1]) {
+//             i++;
+//         }
+//         else if (one[1] > two[1]) {
+//             j++;
+//         }
+//     else 
+//         i++;
+//         j++;
