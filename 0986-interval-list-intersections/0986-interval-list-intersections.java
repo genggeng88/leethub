@@ -5,13 +5,15 @@ class Solution {
 
         int i = 0, j = 0, m = firstList.length, n = secondList.length;
         int[] first = new int[2], second = new int[2];
-        List<int[]> buffer = new LinkedList<>();
+        List<int[]> buffer = new ArrayList<>();
         // double check condition
         while (i < m && j < n) {
             first = firstList[i];
             second = secondList[j];
-            if ((second[0] >= first[0] && first[1] >= second[0]) || (first[0] >= second[0] && second[1] >= first[0])) {
-                int[] inter = new int[]{Math.max(first[0], second[0]), Math.min(first[1], second[1])};
+            int start = Math.max(first[0], second[0]);
+            int end = Math.min(first[1], second[1]);
+            if (start <= end) {
+                int[] inter = new int[]{start, end};
                 buffer.add(inter);
                 if (first[1] < second[1]) {
                     i++;
@@ -30,11 +32,7 @@ class Solution {
             }
 
         }
-        int[][] res = new int[buffer.size()][2];
-        for (int k = 0; k < buffer.size(); k++) {
-            res[k] = buffer.get(k);
-        }
-        return res;
+        return buffer.toArray(new int[buffer.size()][]);
     }
 }
 
