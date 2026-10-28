@@ -1,47 +1,38 @@
 class Solution {
-    private static final int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    
+    final int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
     public int orangesRotting(int[][] grid) {
-        if (grid == null || grid.length == 0) return 0;
-        if (grid[0] == null || grid[0].length == 0) return 0;
+        if (grid == null || grid.length == 0) return -1;
+        if (grid[0] == null || grid[0].length == 0) return -1;
         int m = grid.length, n = grid[0].length;
-        int time = -1;
-        Queue<int[]> queue = new LinkedList<>();
+        Deque<int[]> queue = new ArrayDeque<>();
+        int freshCnt = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (grid[i][j] == 2) {
-                    queue.offer(new int[]{i, j});
-                }
+                if (grid[i][j] == 2) queue.offer(new int[]{i, j});
+                else if (grid[i][j] == 1) freshCnt++;
             }
         }
-
+        if (freshCnt == 0) return 0;
+        int time = -1;
         while (!queue.isEmpty()) {
-            int len = queue.size();
-            for (int i = 0; i < len; i++) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
                 int[] cell = queue.poll();
+                int x = cell[0], y = cell[1];
                 for (int[] dir : dirs) {
-                    int newi = cell[0] + dir[0];
-                    int newj = cell[1] + dir[1];
-                    if (inbound(newi, newj, m, n) && grid[newi][newj] == 1) {
-                        grid[newi][newj] = 2;
-                        queue.offer(new int[]{newi, newj});
+                    int nx = x + dir[0], ny = y + dir[1];
+                    if (nx < m && nx >= 0 && ny < n && ny >= 0) {
+                        if (grid[nx][ny] == 1) {
+                            freshCnt--;
+                            grid[nx][ny] = 2;
+                            queue.offer(new int[]{nx, ny});
+                        }
                     }
                 }
             }
             time++;
         }
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (grid[i][j] == 1) {
-                    return -1;
-                }
-            }
-        }
-        return time == -1 ? 0 : time;
-    }
-
-    private boolean inbound(int i, int j, int m, int n) {
-        return i >= 0 && i < m && j >= 0 && j <n;
+        return freshCnt == 0 ? time : -1;
     }
 }
