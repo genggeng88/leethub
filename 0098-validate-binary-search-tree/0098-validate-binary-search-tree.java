@@ -16,14 +16,16 @@
 class Solution {
     public boolean isValidBST(TreeNode root) {
         if (root == null || (root.left == null && root.right == null)) return true;
-        return helper(root, Long.MIN_VALUE, Long.MAX_VALUE);
+        long[] prev = new long[]{Long.MIN_VALUE};
+        return helper(root, prev);
     }
 
-    private boolean helper(TreeNode root, long low, long high) {
+    private boolean helper(TreeNode root, long[] prev) {
         if (root == null) return true;
-        if (root.val <= low || root.val >= high) return false;
-        if (!helper(root.left, low, root.val)) return false;
-        if (!helper(root.right, root.val, high)) return false;
+        if (!helper(root.left, prev)) return false;
+        if (root.val <= prev[0]) return false;
+        prev[0] = root.val; 
+        if (!helper(root.right, prev)) return false;
         return true;
     }
 }
