@@ -1,38 +1,49 @@
 class Solution {
     public List<String> letterCombinations(String digits) {
-        List<String> res = new LinkedList<>();
+        List<String> res = new ArrayList<>();
         if (digits == null || digits.length() == 0) return res;
-        dfs(res, digits, 0, new StringBuilder());
+        dfs(0, digits, res, new StringBuilder());
         return res;
     }
 
-    private void dfs(List<String> res, String digits, int idx, StringBuilder sb) {
+    private void dfs(int idx, String digits, List<String> res, StringBuilder sb) {
         if (idx == digits.length()) {
             res.add(sb.toString());
             return;
         }
-        String str = getString(digits.charAt(idx) - '0');
-        if (str.equals("")) dfs(res, digits, idx+1, sb);
+        String nums = getNums(digits.charAt(idx));
+        if (nums.length() == 0) {
+            dfs(idx+1, digits, res, sb);
+        }
         else {
-            for (char ch : str.toCharArray()) {
+            for (char ch : nums.toCharArray()) {
                 sb.append(ch);
-                dfs(res, digits, idx+1, sb);
+                dfs(idx+1, digits, res, sb);
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
     }
 
-    private String getString(int digit) {
-        switch (digit) {
-            case 2: return "abc";
-            case 3: return "def";
-            case 4: return "ghi";
-            case 5: return "jkl";
-            case 6: return "mno";
-            case 7: return "pqrs";
-            case 8: return "tuv";
-            case 9: return "wxyz";
-            default: return "";
+    private String getNums(char ch) {
+        switch (ch) {
+            case '2':
+                return "abc";
+            case '3':
+                return "def";
+            case '4':
+                return "ghi";
+            case '5':
+                return "jkl";
+            case '6':
+                return "mno";
+            case '7':
+                return "pqrs";
+            case '8':
+                return "tuv";
+            case '9':
+                return "wxyz";
+            default:
+                return "";
         }
     }
 }
