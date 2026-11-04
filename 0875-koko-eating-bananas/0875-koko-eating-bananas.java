@@ -24,15 +24,9 @@ class Solution {
     private boolean valid(int[] piles, int h, int k) {
         int hours = 0;
         for (int pile : piles) {
-            if (pile % k == 0) {
-                hours += pile / k;
-            }
-            else {
-                hours += pile / k + 1;
-            }
+            hours += (pile + k - 1) / k;
         }
-        if (hours <= h) return true;
-        return false;
+        return hours <= h;
     }
 }
 
