@@ -1,73 +1,40 @@
 class Solution {
     public String minWindow(String s, String t) {
-        if (s == null || s.length() == 0) return "";
-        if (t == null || t.length() == 0) return "";
-
+        if (s.length() < t.length()) return "";
         Map<Character, Integer> map = new HashMap<>();
         for (char ch : t.toCharArray()) {
             map.put(ch, map.getOrDefault(ch, 0) + 1);
         }
-        int cntNeeded = map.size(), i = 0, j = 0;
-        String res = "";
-
+        int i = 0, j = 0, matchNeeded = map.size();
+        String cand = "";
         while (j < s.length()) {
-            if (cntNeeded > 0) {
-                char c = s.charAt(j);
-                if (map.containsKey(c)) {
-                    map.put(c, map.get(c) - 1);
-                    if (map.get(c) == 0) {
-                        cntNeeded--;
-                    }
+            char curr = s.charAt(j);
+            if (map.containsKey(curr)) {
+                map.put(curr, map.get(curr) - 1);
+                if (map.get(curr) == 0) {
+                    matchNeeded--;
                 }
-                j++;
             }
-            else if (cntNeeded == 0) {
-                if (res == "" || j - i < res.length()) {
-                    res = s.substring(i, j);
+            while (matchNeeded == 0) {
+                if (cand == "" || j - i + 1 < cand.length()) {
+                    cand = s.substring(i, j+1);
                 }
-                char c2 = s.charAt(i);
-                if (map.containsKey(c2)) {
-                    map.put(c2, map.get(c2) + 1);
-                    if (map.get(c2) == 1) {
-                        cntNeeded++;
+                char remove = s.charAt(i);
+                if (map.containsKey(remove)) {
+                    map.put(remove, map.get(remove) + 1);
+                    if (map.get(remove) == 1) {
+                        matchNeeded++;
                     }
                 }
                 i++;
             }
+            j++;
         }
-
-        while (i < s.length() && cntNeeded == 0) {
-            if (res == "" || j - i < res.length()) {
-                res = s.substring(i, j);
-            }
-            char c2 = s.charAt(i);
-            if (map.containsKey(c2)) {
-                map.put(c2, map.get(c2) + 1);
-                if (map.get(c2) == 1) {
-                    cntNeeded++;
-                }
-            }
-            i++;
-        }
-        return res;
+        return cand;
     }
 }
 
-//     0 1 2 3 4 5 6 7 8 9 10 11 12
-// s = A D O B E C O D E B A  N  C    res => sihh substring(4, 8)
-//                 i
-//                                 j         
-                
-// t = A B C           
-// map: {A, 0>, <B, 0>, <C, 0>}
-// needed:0                        res = substring(0, 6) => ADOBED
-
-
-
-
-
-
-
-
-
-
+// "ADOBECODEBANC"
+//           i
+//              j
+// "ABC"
