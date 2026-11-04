@@ -1,25 +1,8 @@
 class Solution {
-    class Task {
-        char ch;
-        int cnt;
-        int cooldown;
-
-        public Task(char ch, int cnt) {
-            this.ch = ch;
-            this.cnt = cnt;
-            this.cooldown = 0;
-        }
-    }
-
     public int leastInterval(char[] tasks, int n) {
         if (tasks == null || tasks.length == 0) return 0;
         if (n == 0) return tasks.length;
-        PriorityQueue<Task> pq = new PriorityQueue<>(new Comparator<Task>(){
-            @Override
-            public int compare(Task t1, Task t2) {
-                return Integer.compare(t2.cnt, t1.cnt);
-            }
-        });
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
 
         Map<Character, Integer> map = new HashMap<>();
         for (char ch : tasks) {
@@ -27,22 +10,22 @@ class Solution {
         }
 
         for (Character ch : map.keySet()) {
-            pq.offer(new Task(ch, map.get(ch)));
+            pq.offer(map.get(ch));
         }
 
-        Queue<Task> queue = new ArrayDeque<>();
+        // queue stores <cnt, cooldown>, when cooldown == 0, put cnt into pq
+        Queue<int[]> queue = new ArrayDeque<>();
         int interval = 0;
 
         while (!pq.isEmpty() || !queue.isEmpty()) {
-            if (!queue.isEmpty() && interval >= queue.peek().cooldown) {
-                pq.offer(queue.poll());
+            if (!queue.isEmpty() && interval >= queue.peek()[1]) {
+                pq.offer(queue.poll()[0]);
             }
             if (!pq.isEmpty()) {
-                Task t = pq.poll();
-                t.cnt--;
-                if (t.cnt > 0) {
-                    t.cooldown = interval + n + 1;
-                    queue.offer(t);
+                int freq = pq.poll();
+                freq--;
+                if (freq > 0) {
+                    queue.offer(new int[]{freq, interval + n + 1});
                 }
             }
             interval++;  // add task t or idle if pq is empty
