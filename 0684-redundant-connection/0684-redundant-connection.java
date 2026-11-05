@@ -1,41 +1,31 @@
 class Solution {
     public int[] findRedundantConnection(int[][] edges) {
         int n = edges.length;
+        int[] parent = new int[n+1];
 
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i <= n; i++) {
-            graph.add(new ArrayList<>());
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
         }
 
         for (int[] edge : edges) {
             int u = edge[0];
             int v = edge[1];
 
-            boolean[] visited = new boolean[n+1];
+            int rootU = find(parent, u);
+            int rootV = find(parent, v);
 
-            // check if u and v already connected
-            if (dfs(u, v, graph, visited)) {
-                return edge;
-            }
+            if (rootU == rootV) return edge;
 
-            graph.get(u).add(v);
-            graph.get(v).add(u);
+            parent[rootV] = rootU;
         }
-        return edges[0];
+
+        return new int[0];
     }
 
-    private boolean dfs(int node, int target, List<List<Integer>> graph, boolean[] visited) {
-        if (node == target) return true;
-
-        visited[node] = true;
-
-        for (int nei : graph.get(node)) {
-            if (!visited[nei]) {
-                if (dfs(nei, target, graph, visited)) {
-                    return true;
-                }
-            }
+    private int find(int[] parent, int node) {
+        if (parent[node] != node) {
+            parent[node] = find(parent, parent[node]);
         }
-        return false;
+        return parent[node];
     }
 }
