@@ -1,27 +1,29 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        if (intervals == null || intervals.length == 0) return new int[][]{};
-        List<int[]> res = new ArrayList<>();
+        List<int[]> tmp = new ArrayList<>();
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
-
+        
         int[] cand = intervals[0];
         for (int i = 1; i < intervals.length; i++) {
-            if (cand[1] < intervals[i][0]) {
-                res.add(cand);
-                cand = intervals[i];
+            int[] interval = intervals[i];
+            
+            if (cand[1] < interval[0]) {       // no overlapping
+                tmp.add(cand);
+                cand = interval;
             }
-            else {
-                int l = Math.min(cand[0], intervals[i][0]);
-                int r = Math.max(cand[1], intervals[i][1]);
-                cand = new int[]{l, r};
+            else {    // overlapping => merge, update cand
+                int first = Math.min(cand[0], interval[0]);
+                int second = Math.max(cand[1], interval[1]);
+                cand = new int[]{first, second};
             }
         }
-        res.add(cand);
+        tmp.add(cand);
 
-        int[][] result = new int[res.size()][2];
-        for (int i = 0; i < res.size(); i++) {
-            result[i] = res.get(i);
+        int[][] res = new int[tmp.size()][2];
+        for (int i = 0; i < tmp.size(); i++) {
+            res[i] = tmp.get(i);
         }
-        return result;
+
+        return res;
     }
 }
