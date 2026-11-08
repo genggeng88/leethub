@@ -10,42 +10,39 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        if (lists == null || lists.length == 0) return null;
-        if (lists.length == 1) return lists[0];
         int n = lists.length;
-
-        while (n > 1) {
-            for (int i = 0; i <= (n - 1) / 2; i++) {
-                if (i * 2 + 1 < n) {
-                    lists[i] = merge(lists[i * 2], lists[i * 2 + 1]);
-                }
-                else {
-                    lists[i] = lists[i * 2];
-                }
-            }
-            n = (n + 1) / 2;
-        }
-        return lists[0];
+        return helper(0, n - 1, lists);
     }
 
-    public ListNode merge(ListNode a, ListNode b) {
+    private ListNode helper(int l, int r, ListNode[] lists) {
+        if (l == r) return lists[l];
+        if (l > r) return null;
+
+        int m = l + (r - l)/2;
+        
+        ListNode left = helper(l, m, lists);
+        ListNode right = helper(m+1, r, lists);
+
+        return merge(left, right);
+    }
+
+    private ListNode merge(ListNode left, ListNode right) {
         ListNode dummy = new ListNode(0);
-        ListNode curr = dummy;
-        if (a == null) return b;
-        if (b == null) return a;
-        while (a != null && b != null) {
-            if (a.val < b.val) {
-                curr.next = a;
-                a = a.next;
+        ListNode curr = dummy, l = left, r = right;
+        while (l != null && r != null) {
+            if (l.val < r.val) {
+                curr.next = l;
+                l = l.next;
             }
             else {
-                curr.next = b;
-                b = b.next;
+                curr.next = r;
+                r = r.next;
             }
             curr = curr.next;
         }
-        if (a != null) curr.next = a;
-        if (b != null) curr.next = b;
+        if (l != null) curr.next = l;
+        if (r != null) curr.next = r;
+        
         return dummy.next;
     }
 }
