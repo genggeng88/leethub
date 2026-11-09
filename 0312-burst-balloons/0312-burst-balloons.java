@@ -11,12 +11,8 @@ class Solution {
 
         for (int i = n+1; i >= 0; i--) {
             for (int j = i; j < n+2; j++) {
-                if (i == j || i+1 == j) dp[i][j] = 0;
-                else {
-                    for (int k = i+1; k < j; k++) {
-                        dp[i][j] = Math.max(dp[i][j], 
-                                    dp[i][k] + dp[k][j] + arr[i] * arr[k] * arr[j]);
-                    }
+                for (int k = i+1; k < j; k++) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k][j] + arr[i] * arr[k] * arr[j]);
                 }
             }
         }
