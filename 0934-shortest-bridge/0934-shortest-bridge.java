@@ -8,17 +8,15 @@ class Solution {
         Queue<int[]> buffer = new ArrayDeque<>();
         boolean found = false;
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < m && !found; i++) {
+            for (int j = 0; j < n && !found; j++) {
                 if (grid[i][j] == 1 && !visited[i][j]) {
                     queue.offer(new int[]{i, j});
                     visited[i][j] = true;
                     bfs(queue, buffer, visited, grid);
                     found = true;
-                    break;
                 }
             }
-            if (found) break;
         }
 
         int bridge = 0;
