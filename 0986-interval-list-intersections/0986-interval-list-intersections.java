@@ -9,16 +9,13 @@ class Solution {
         while (f < m && s < n) {
             int[] first = firstList[f];
             int[] second = secondList[s];
-            // no overlap
-            if (first[1] < second[0]) {
-                f++;
-            }
-            else if (second[1] < first[0]) {
-                s++;
-            }
+
+            int start = Math.max(first[0], second[0]);
+            int end = Math.min(first[1], second[1]);
+
             // overlap
-            else {
-                tmp.add(new int[]{Math.max(first[0], second[0]), Math.min(first[1], second[1])});
+            if (start <= end) {
+                tmp.add(new int[]{start, end});
                 if (first[1] > second[1]) {
                     s++;
                 }
@@ -29,6 +26,10 @@ class Solution {
                     f++;
                     s++;
                 }
+            }
+            else {
+                if (first[1] < second[0]) f++;
+                else s++;
             }
         }
         int[][] res = new int[tmp.size()][2];
