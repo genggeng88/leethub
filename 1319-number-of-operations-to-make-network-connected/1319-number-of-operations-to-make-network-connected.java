@@ -20,9 +20,9 @@ class Solution {
     }
 
     private int findParent(int p, int[] parent) {
-        while (p != parent[p]) {
-            p = parent[p];
+        if (p != parent[p]) {
+            parent[p] = findParent(p, parent);
         }
-        return p;
+        return parent[p];
     }
 }
