@@ -1,6 +1,7 @@
 class Solution {
     public int makeConnected(int n, int[][] connections) {
-        int disconnected = n, extraConnections = 0;
+        if (connections.length < n - 1) return -1;
+        int disconnected = n;
         int[] parent = new int[n];
         for (int i = 0; i < n; i++) {
             parent[i] = i;
@@ -13,11 +14,9 @@ class Solution {
             if (p1 != p2) {
                 parent[p2] = p1;
                 disconnected--;
-            } else {
-                extraConnections++;
-            }
+            } 
         }
-        return disconnected <= extraConnections + 1 ? disconnected - 1 : -1;
+        return disconnected - 1;
     }
 
     private int findParent(int p, int[] parent) {
