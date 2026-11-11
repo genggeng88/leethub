@@ -4,10 +4,10 @@ class Solution {
     public boolean exist(char[][] board, String word) {
         m = board.length;
         n = board[0].length;
+        boolean[][] visited = new boolean[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (board[i][j] == word.charAt(0)) {
-                    boolean[][] visited = new boolean[m][n];
                     if (dfs(i, j, board, 0, word, visited)) {
                         return true;
                     }
