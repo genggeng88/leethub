@@ -1,42 +1,37 @@
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
         int m = nums1.length, n = nums2.length;
-        int total = m + n, idx = 0;
-        int[] nums = new int[total];
-        int[] buffer = new int[total];
+        int leftSize = (m + n + 1) / 2;
+        int low = 0, high = m;
 
-        for (int num : nums1) nums[idx++] = num;
-        for (int num : nums2) nums[idx++] = num;
+        while (low <= high) {
+            int i = low + (high - low) / 2;
+            int j = leftSize - i;
 
-        mergeSort(0, total - 1, nums, buffer);
-        if (total % 2 != 0) {
-            return (double) nums[total/2];
-        } else {
-            return ((double) nums[total/2 - 1] + nums[total/2]) / 2;
-        }
-    }
+            int left1 = i == 0 ? Integer.MIN_VALUE : nums1[i-1];
+            int right1 = i == m ? Integer.MAX_VALUE : nums1[i];
 
-    private void mergeSort(int l, int r, int[] nums, int[] buffer) {
-        if (l >= r) return;
-        int m = l + (r - l)/2;
-        mergeSort(l, m, nums, buffer);
-        mergeSort(m+1, r, nums, buffer);
-        merge(l, m, r, nums, buffer);
-    }
+            int left2 = j == 0 ? Integer.MIN_VALUE : nums2[j-1];
+            int right2 = j == n ? Integer.MAX_VALUE : nums2[j];
 
-    private void merge(int l, int m, int r, int[] nums, int[] buffer) {
-        for (int i = l; i <= r; i++) {
-            buffer[i] = nums[i];
-        }
-        int k = l, p = m+1;
-        while (l <= m && p <= r) {
-            if (buffer[l] <= buffer[p]) {
-                nums[k++] = buffer[l++];
+            if (left1 <= right2 && left2 <= right1) {
+                int maxLeft = Math.max(left1, left2);
+                if ((m + n) % 2 == 1) {
+                    return maxLeft;
+                }
+                int minRight = Math.min(right1, right2);
+                return ((double) maxLeft + minRight)/2;
+            }
+            if (left1 > right2) {
+                high = i - 1;
             }
             else {
-                nums[k++] = buffer[p++];
+                low = i + 1;
             }
         }
-        while (l <= m) nums[k++] = buffer[l++];
+        return 0.0;
     }
 }
